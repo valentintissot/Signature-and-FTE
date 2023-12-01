@@ -12,6 +12,35 @@ def BM(Ts,J,seed = None):
     dW  = np.sqrt(dts) * rdm.randn(len(dts),J)
     return np.vstack((np.zeros((1,J)),np.cumsum(dW,axis = 0)))
 
+def MC(G,T, r = 0.): 
+    """Monte Carlo price of the reward G (array). 
+       T = maturity, r = continuous interest rate. """
+    return np.mean(np.exp(-r*T) * G,axis = -1)
+
+def baVanilla(x,K,sig,tau):
+    """Bachelier price and greeks for vanilla options, zero interest rate.
+       x = spot, tau = time to maturity """
+    # Volatility over [0,tau]
+    sig_ = sig * np.sqrt(tau)
+    # Formula when volatility and time to maturity are positive
+    if sig_ > 0:
+        # Threshold 
+        d  =  (x - K)/sig_
+        # Call Price
+        C  = sig_ * nm.pdf(d) + (x - K) * nm.cdf(d) 
+        # Delta of Call Option
+        dC = nm.cdf(d)
+        # Gamma of Call/Put Option
+        g  = nm.pdf(d) / sig_
+        # Theta of Call/Put Option (use heat equation)
+        th = - sig**2 * g / 2 
+        # Vega  of Call/Put Option 
+        v  = np.sqrt(tau)* nm.pdf(d)
+    else: 
+        C, dC, g, th, v = np.maximum(x - K,0.), 1*(x >= K), 0.*x, 0.*x, 0.*x
+    # Put Price and Delta (use Put-Call parity!)
+    P, dP = C + x - K, dC - 1
+    return  C, P, dC, dP, g, th,v
 
 def bsVanilla(x0,K,r,delta,sig,T):
     """Black-Scholes price and greeks for vanilla options (call and put)"""
