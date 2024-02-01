@@ -35,12 +35,12 @@ def baVanilla(x,K,sig,tau):
         # Theta of Call/Put Option (use heat equation)
         th = - sig**2 * g / 2 
         # Vega  of Call/Put Option 
-        v  = np.sqrt(tau)* nm.pdf(d)
+        v  = np.sqrt(tau) * nm.pdf(d)
     else: 
         C, dC, g, th, v = np.maximum(x - K,0.), 1*(x >= K), 0.*x, 0.*x, 0.*x
     # Put Price and Delta (use Put-Call parity!)
     P, dP = C + x - K, dC - 1
-    return  C, P, dC, dP, g, th,v
+    return  C, P, dC, dP, g, th, v
 
 def bsVanilla(x0,K,r,delta,sig,T):
     """Black-Scholes price and greeks for vanilla options (call and put)"""
