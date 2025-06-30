@@ -13,7 +13,7 @@ def BM(Ts,J,seed = None):
     return np.vstack((np.zeros((1,J)),np.cumsum(dW,axis = 0)))
 
 def MC(G,T, r = 0.): 
-    """Monte Carlo price of the reward G (array). 
+    """Monte Carlo price of the payoff G (array). 
        T = maturity, r = continuous interest rate. """
     return np.mean(np.exp(-r*T) * G,axis = -1)
 
@@ -43,7 +43,7 @@ def baVanilla(x,K,sig,tau):
     return  C, P, dC, dP, g, th, v
 
 def bsVanilla(x0,K,r,delta,sig,T):
-    """Black-Scholes price and greeks for vanilla options (call and put)"""
+    """Black-Scholes price and greeks for vanilla options."""
     # Discount factor
     D = np.exp(-r*T)
     # Forward Price
